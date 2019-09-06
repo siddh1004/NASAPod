@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NASAPod</string>
+    <string name="api_key">TNhIQVtAvRJjCAAfFAPpMq6Ogo9WJoMuMKdReEQc</string>
+    <string name="title_activity_photo">PhotoActivity</string>
 </resources>
