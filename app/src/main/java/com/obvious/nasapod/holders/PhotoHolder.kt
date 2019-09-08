@@ -18,8 +18,7 @@ class PhotoHolder(private val view: View) : RecyclerView.ViewHolder(view), View.
     fun bindPhoto(photo: NasaPhoto) {
         this.photo = photo
         Picasso.with(view.context).load(photo.url).into(view.itemImage)
-        view.itemDate.text = photo.date
-        view.itemDescription.text = photo.explanation
+        view.itemDescription.text = photo.title
     }
 
     override fun onClick(v: View) {

@@ -1,51 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:padding="12dp"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:background="@android:color/white"
+        android:layout_margin="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <ImageView
             android:id="@+id/itemImage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintBottom_toTopOf="@+id/itemDate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.74" />
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true" />
 
-    <TextView
-            android:id="@+id/itemDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|start"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/itemDescription"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemImage"
-            tools:text="Some date" />
+
 
     <TextView
             android:id="@+id/itemDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|start"
-            android:layout_weight="1"
+            android:padding="12dp"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
             android:ellipsize="end"
-            android:maxLines="5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemDate" />
+            android:maxLines="3"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

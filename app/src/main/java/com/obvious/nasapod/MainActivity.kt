@@ -2,6 +2,7 @@ package com.obvious.nasapod
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.obvious.nasapod.adapters.RecyclerAdapter
@@ -67,7 +68,10 @@ class MainActivity : AppCompatActivity(){
             myCompositeDisposable?.add(apiService.getData("TNhIQVtAvRJjCAAfFAPpMq6Ogo9WJoMuMKdReEQc", date)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponse))
+                .subscribe(
+                    { result -> handleResponse(result) },
+                    { error -> displayError(error) }
+                ))
 
             calendar.add(Calendar.DAY_OF_YEAR, -1)
             date = dateFormat.format(calendar.time)
@@ -89,4 +93,7 @@ class MainActivity : AppCompatActivity(){
         myCompositeDisposable?.clear()
     }
 
+    fun displayError(error: Throwable) {
+        Log.i("error", "Error while fetching data..", error)
+    }
 }
