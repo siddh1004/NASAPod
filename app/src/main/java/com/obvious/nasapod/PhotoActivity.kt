@@ -17,6 +17,7 @@ class PhotoActivity : AppCompatActivity() {
         selectedPhoto = intent.getSerializableExtra(Image_key) as NasaPhoto
         Picasso.with(this).load(selectedPhoto?.url).into(photoImageView)
 
+//        var imageView = CustomImageView(this)
         photoTitle.text = selectedPhoto?.title
         photoDate.text = selectedPhoto?.date
         photoDescription.text = selectedPhoto?.explanation
