@@ -41,7 +41,10 @@ class MainActivity : AppCompatActivity(){
         recyclerView.layoutManager = gridLayoutManager
 
         myCompositeDisposable = CompositeDisposable()
-        loadData()
+
+        if(nasaPhotoArrayList.size <=0){
+            loadData()
+        }
     }
 
     private fun setRecyclerViewScrollListener() {
@@ -74,8 +77,10 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun handleResponse(nasaPhoto: NasaPhoto) {
-        nasaPhotoArrayList.add(nasaPhoto)
-        adapter.notifyItemInserted(nasaPhotoArrayList.size-1)
+        if (nasaPhoto.media_type == "image"){
+            nasaPhotoArrayList.add(nasaPhoto)
+            adapter.notifyItemInserted(nasaPhotoArrayList.size-1)
+        }
 
     }
 
