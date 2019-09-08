@@ -3,8 +3,8 @@ package com.obvious.nasapod.holders
 import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.obvious.nasapod.NasaPhoto
-import com.obvious.nasapod.PhotoActivity
+import com.obvious.nasapod.models.NasaPhoto
+import com.obvious.nasapod.activities.PhotoActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.image_list_item.view.*
 

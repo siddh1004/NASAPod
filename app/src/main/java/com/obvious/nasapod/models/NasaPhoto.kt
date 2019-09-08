@@ -1,4 +1,4 @@
-package com.obvious.nasapod
+package com.obvious.nasapod.models
 
 import java.io.Serializable
 

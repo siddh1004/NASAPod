@@ -2,7 +2,7 @@ package com.obvious.nasapod.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.obvious.nasapod.NasaPhoto
+import com.obvious.nasapod.models.NasaPhoto
 import com.obvious.nasapod.R
 import com.obvious.nasapod.extensions.inflate
 import com.obvious.nasapod.holders.PhotoHolder

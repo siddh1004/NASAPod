@@ -1,10 +1,13 @@
-package com.obvious.nasapod
+package com.obvious.nasapod.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.obvious.nasapod.NasaApiService
+import com.obvious.nasapod.models.NasaPhoto
+import com.obvious.nasapod.R
 import com.obvious.nasapod.adapters.RecyclerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -32,20 +35,24 @@ class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
+        myCompositeDisposable = CompositeDisposable()
+
+        setContentView(R.layout.activity_main)
+        setRecyclerView()
+
+        if(nasaPhotoArrayList.size <=0){
+            loadData()
+        }
+    }
+
+    private fun setRecyclerView(){
         adapter = RecyclerAdapter(nasaPhotoArrayList)
         recyclerView.adapter = adapter
         setRecyclerViewScrollListener()
 
         gridLayoutManager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = gridLayoutManager
-
-        myCompositeDisposable = CompositeDisposable()
-
-        if(nasaPhotoArrayList.size <=0){
-            loadData()
-        }
     }
 
     private fun setRecyclerViewScrollListener() {
