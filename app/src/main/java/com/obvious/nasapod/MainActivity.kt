@@ -1,40 +1,47 @@
 package com.obvious.nasapod
 
-import ImageRequester
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.obvious.nasapod.adapters.RecyclerAdapter
-import com.obvious.nasapod.models.Photo
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity(), ImageRequester.ImageRequesterResponse {
+class MainActivity : AppCompatActivity(){
 
-    private var photosList: ArrayList<Photo> = ArrayList()
-    private lateinit var imageRequester: ImageRequester
     private lateinit var adapter: RecyclerAdapter
     private lateinit var gridLayoutManager: GridLayoutManager
 
     private val lastVisibleItemPosition: Int
         get() = gridLayoutManager.findLastVisibleItemPosition()
 
+    private var myCompositeDisposable: CompositeDisposable? = null
+    private var nasaPhotoArrayList: ArrayList<NasaPhoto> = ArrayList()
+
+    private val apiService = NasaApiService.create()
+    private val calendar: Calendar = Calendar.getInstance()
+    private val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private var date: String = dateFormat.format(calendar.time)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        adapter = RecyclerAdapter(photosList)
+
+        adapter = RecyclerAdapter(nasaPhotoArrayList)
         recyclerView.adapter = adapter
         setRecyclerViewScrollListener()
+
         gridLayoutManager = GridLayoutManager(this, 2)
         recyclerView.layoutManager = gridLayoutManager
-        setRecyclerViewItemTouchListener()
 
-
-        imageRequester = ImageRequester(this)
+        myCompositeDisposable = CompositeDisposable()
+        loadData()
     }
 
     private fun setRecyclerViewScrollListener() {
@@ -42,57 +49,39 @@ class MainActivity : AppCompatActivity(), ImageRequester.ImageRequesterResponse 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 val totalItemCount = recyclerView.layoutManager!!.itemCount
-                if (!imageRequester.isLoadingData && totalItemCount == lastVisibleItemPosition + 10) {
-                    requestPhoto()
+                if (totalItemCount == lastVisibleItemPosition + 1) {
+                    loadData()
                 }
             }
         })
     }
 
-    private fun setRecyclerViewItemTouchListener() {
+    private fun loadData() {
 
-        //1
-        val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, viewHolder1: RecyclerView.ViewHolder): Boolean {
-                //2
-                return false
-            }
+        var i = 10
+        while (i > 0){
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                //3
-                val position = viewHolder.adapterPosition
-                photosList.removeAt(position)
-                recyclerView.adapter!!.notifyItemRemoved(position)
-            }
-        }
+            myCompositeDisposable?.add(apiService.getData("TNhIQVtAvRJjCAAfFAPpMq6Ogo9WJoMuMKdReEQc", date)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse))
 
-        //4
-        val itemTouchHelper = ItemTouchHelper(itemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (photosList.size == 0) {
-            requestPhoto()
+            calendar.add(Calendar.DAY_OF_YEAR, -1)
+            date = dateFormat.format(calendar.time)
+            i--
         }
 
     }
 
-    private fun requestPhoto() {
-        try {
-            imageRequester.getPhoto()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+    private fun handleResponse(nasaPhoto: NasaPhoto) {
+        nasaPhotoArrayList.add(nasaPhoto)
+        adapter.notifyItemInserted(nasaPhotoArrayList.size-1)
 
     }
 
-    override fun receivedNewPhoto(newPhoto: Photo) {
-        runOnUiThread {
-            photosList.add(newPhoto)
-                adapter.notifyItemInserted(photosList.size-1)
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        myCompositeDisposable?.clear()
     }
 
 }
